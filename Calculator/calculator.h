@@ -99,6 +99,7 @@ void calculator::do_suffix()
 					suffix.push(temp += symbol.top());
 					symbol.pop();
 				}
+				symbol.push(str[0]);
 			}
 		}
 		else

@@ -10,7 +10,7 @@ using namespace std;
 int main()
 {
 	//1+2*((2+3)*5)+(2-(3+5))=
-	char *str = "1+(2-(3+5))=";
+	char *str = "1+2*((2+3)*5)+(2-(3+5))=";
 	printf("%s\n", str);
 	/*state_machine sm(str);
 	cout<<"check = "<<sm.check()<<endl;
