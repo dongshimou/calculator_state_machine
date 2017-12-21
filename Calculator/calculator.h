@@ -3,6 +3,8 @@
 #define _CALCULATOR_H_
 
 #include "state_machine.h"
+
+#include <cmath>
 #define eps 1e-8
 class calculator : public state_machine
 {
@@ -69,7 +71,7 @@ double calculator::operation(double &a, char c, double b) const
     else if (c == '*')
         a *= b;
     else if (c == '/') {
-        if (abs(b) <= eps)
+        if (std::abs(b) <= eps)
             return false;
         else
             return a /= b;
