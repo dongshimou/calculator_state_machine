@@ -11,8 +11,8 @@
 #include <queue>
 #include <iostream>
 #include <functional>
-
-auto cal(std::queue<state_machine::token> expression){
+#include "tokenzied.hpp"
+auto cal(std::queue<token> expression){
     auto token=[&](){
         return expression.front();
     };
@@ -27,7 +27,7 @@ auto cal(std::queue<state_machine::token> expression){
     };
 
     std::function<double(void)>expr;
-    auto factor(){
+    auto factor=[&](){
         if(token().string()=="("){
             match("(");
             auto value=expr();
@@ -35,7 +35,7 @@ auto cal(std::queue<state_machine::token> expression){
         }else{
             auto value=token().number();
         }
-    }
+    };
 }
 
 #endif //CALCULATOR_CAL_HPP

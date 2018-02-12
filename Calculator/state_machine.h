@@ -9,10 +9,8 @@
 #include <cstring>
 #include <variant>
 #include <array>
-class state_machine
-{
-    enum class state
-    {
+class state_machine {
+    enum class state {
         BEGIN,
         INTEGER,
         FLOAT,
@@ -22,61 +20,17 @@ class state_machine
         EQUAL,
         END
     };
-    ///todo
-    /*
-     * parse to tokens
-     */
-public:
-    struct token{
-        enum Type{
-            Number,
-            Symbol,
-        };
-        std::variant<double,std::string>value;
-        Type type;
-        template <typename T>
-        T get(){
-            auto ptr=std::get_if<T>(&value);
-            if (ptr==nullptr){
-                throw "get type error";
-            }
-            return *ptr;
-        };
-
-        double number(){
-            return get<double>();
-        }
-        std::string string(){
-            return get<std::string>();
-        }
-
-        template <typename T>
-        void set(T&& v){
-            if(std::is_same<double,T>::value){
-                type=Number;
-            }else if(std::is_same<int, T>::value){
-                type=Number;
-            }else if(std::is_same<std::string, T>::value){
-                type==Symbol;
-            }else{
-                throw "set type error";
-            }
-            value=v;
-        }
-    };
 private:
     state now_state = state::BEGIN;
     std::string input;
     std::stack<char> brackets;
     bool is_equal = false;
     void left_bracket() { brackets.push('('); }
-    bool right_bracket()
-    {
+    bool right_bracket() {
         if (!brackets.empty()) {
             brackets.pop();
             return true;
-        }
-        else
+        } else
             return false;
     }
 public:
@@ -86,27 +40,21 @@ public:
     void print() const;
 
 protected:
-    static bool is_operation(char c)
-    {
-        return ( c == '+' || c == '-' || c == '*' || c == '/' );
-    }
-    static bool is_number(char c) { return ( c >= '0' && c <= '9' ); }
-    static bool is_symbol(char c) { return ( is_operation(c) || c == '(' || c == ')' ); }
+    static bool is_operation(char c) { return (c == '+' || c == '-' || c == '*' || c == '/'); }
+    static bool is_number(char c) { return (c >= '0' && c <= '9'); }
+    static bool is_symbol(char c) { return (is_operation(c) || c == '(' || c == ')'); }
     std::queue<std::string> expression;
 };
 
-inline state_machine::state_machine(const char* str)
-{
+inline state_machine::state_machine(const char* str) {
     input = std::string(str);
 }
 
-inline state_machine::state_machine(std::string str)
-{
+inline state_machine::state_machine(std::string str) {
     input = str;
 }
 
-inline void state_machine::print() const
-{
+inline void state_machine::print() const {
     auto temp = expression;
     while (!temp.empty()) {
         std::cout << temp.front() << " ";
@@ -114,8 +62,7 @@ inline void state_machine::print() const
     }
     std::cout << std::endl;
 }
-bool state_machine::check()
-{
+bool state_machine::check() {
     now_state = state::BEGIN;
     is_equal = false;
     while (!expression.empty()) {
@@ -138,16 +85,13 @@ bool state_machine::check()
             if (is_number(*ptr)) {
                 p_push();
                 now_state = state::INTEGER;
-            }
-            else if (is_operation(*ptr)) {
+            } else if (is_operation(*ptr)) {
                 p_push();
                 now_state = state::SYMBOL;
-            }
-            else if (*ptr == '(') {
+            } else if (*ptr == '(') {
                 p_push();
                 now_state = state::LEFT;
-            }
-            else {
+            } else {
                 p_pop();
                 ptr--;
                 now_state = state::END;
@@ -157,27 +101,22 @@ bool state_machine::check()
             if (is_number(*ptr)) {
                 p_push();
                 now_state = state::INTEGER;
-            }
-            else if (*ptr == '.') {
+            } else if (*ptr == '.') {
                 p_push();
                 now_state = state::FLOAT;
-            }
-            else if (*ptr == ')') {
+            } else if (*ptr == ')') {
                 p_pop();
                 ptr--;
                 now_state = state::RIGHT;
-            }
-            else if (is_operation(*ptr)) {
+            } else if (is_operation(*ptr)) {
                 p_pop();
                 ptr--;
                 now_state = state::BEGIN;
-            }
-            else if (*ptr == '=') {
+            } else if (*ptr == '=') {
                 p_pop();
                 ptr--;
                 now_state = state::EQUAL;
-            }
-            else {
+            } else {
                 p_pop();
                 ptr--;
                 now_state = state::END;
@@ -187,23 +126,19 @@ bool state_machine::check()
             if (is_number(*ptr)) {
                 p_push();
                 now_state = state::FLOAT;
-            }
-            else if (is_operation(*ptr)) {
+            } else if (is_operation(*ptr)) {
                 p_pop();
                 ptr--;
                 now_state = state::BEGIN;
-            }
-            else if (*ptr == ')') {
+            } else if (*ptr == ')') {
                 p_pop();
                 ptr--;
                 now_state = state::RIGHT;
-            }
-            else if (*ptr == '=') {
+            } else if (*ptr == '=') {
                 p_pop();
                 ptr--;
                 now_state = state::EQUAL;
-            }
-            else {
+            } else {
                 p_pop();
                 ptr--;
                 now_state = state::END;
@@ -214,13 +149,11 @@ bool state_machine::check()
                 p_pop();
                 ptr--;
                 now_state = state::BEGIN;
-            }
-            else if (*ptr == '(') {
+            } else if (*ptr == '(') {
                 p_pop();
                 ptr--;
                 now_state = state::LEFT;
-            }
-            else {
+            } else {
                 p_pop();
                 ptr--;
                 now_state = state::END;
@@ -232,12 +165,10 @@ bool state_machine::check()
                 p_push();
                 p_pop();
                 now_state = state::LEFT;
-            }
-            else if (is_number(*ptr)) {
+            } else if (is_number(*ptr)) {
                 p_push();
                 now_state = state::INTEGER;
-            }
-            else {
+            } else {
                 p_pop();
                 ptr--;
                 now_state = state::END;
@@ -252,16 +183,13 @@ bool state_machine::check()
                 p_push();
                 p_pop();
                 now_state = state::RIGHT;
-            }
-            else if (is_operation(*ptr)) {
+            } else if (is_operation(*ptr)) {
                 p_push();
                 now_state = state::SYMBOL;
-            }
-            else if (*ptr == '=') {
+            } else if (*ptr == '=') {
                 ptr--;
                 now_state = state::EQUAL;
-            }
-            else {
+            } else {
                 ptr--;
                 now_state = state::END;
             }
@@ -270,8 +198,7 @@ bool state_machine::check()
             if (*ptr == '=' && !is_equal) {
                 is_equal = true;
                 now_state = state::EQUAL;
-            }
-            else {
+            } else {
                 delete[] str;
                 return false;
             }
