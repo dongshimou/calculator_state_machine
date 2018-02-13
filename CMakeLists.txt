@@ -8,5 +8,5 @@ add_executable(calculator
         Calculator/main.cpp
         Calculator/calculator.h
         Calculator/state_machine.h
-
+        Calculator/tokenzied.hpp
         Calculator/cal.hpp)

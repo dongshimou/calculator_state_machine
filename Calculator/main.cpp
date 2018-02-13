@@ -2,7 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include <string>
-
+#include <queue>
 #include "calculator.h"
 #include "state_machine.h"
 
@@ -13,25 +13,31 @@ using namespace std;
 
 
 int main() {
-    // 1+2*((2+3)*5)+(2-(3+5))=
-    const char *str = "11+2*((2+3)*5)+(2-(3+5))=";
-    printf("%s\n", str);
 
-    token t;
+    string str = string("11.1+2*((2+3)*5)+(2-(3+5))");
+    cout<<str<<endl;
+
+    //后缀表达式
+    calculator ccc(str);
+    bool flag = ccc.check();
+    ccc.state_machine::print();
+    ccc.do_suffix();
+    ccc.print();
+    if (ccc.solve())
+        cout << ccc.get_answer() << endl;
+
+
+    //递归下降
+    queue<token> tokens;
     try {
-        t.set<int>(1);
-    } catch (...) {
-        t.set<double>(2);
+        tokens =tokenzied(str);
+        auto v=cal(tokens);
+        cout<<v<<endl;
+    }catch (const char* t){
+        std::cout<<t;
     }
-    std::cout<<t.number()<<endl;
+
 
     cin.get();
-//    calculator cal(str);
-//    bool flag = cal.check();
-//    cal.state_machine::print();
-//    cal.do_suffix();
-//    cal.print();
-//
-//    if (cal.solve())
-//        cout << cal.get_answer() << endl;
+
 }
